@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BookStore.Domain.BooksAggregate
 {
-    class IBooksRepository
+    public interface IBooksRepository :IGenericRepository<Book>
     {
+        IEnumerable<Book> GetBooksByGenre(string Genre);
     }
 }

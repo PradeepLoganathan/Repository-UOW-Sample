@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BookStore.Domain.CatalogueAggregate
+﻿namespace BookStore.Domain.CatalogueAggregate
 {
-    class ICatalogueRepository
+    public interface ICatalogueRepository:IGenericRepository<Catalogue>
     {
     }
 }
+
