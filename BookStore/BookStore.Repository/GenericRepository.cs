@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly BookStoreDbContext _context;
-        public GenericRepository(BookStoreDbContext context)
+
+        protected GenericRepository(BookStoreDbContext context)
         {
             _context = context;
         }
