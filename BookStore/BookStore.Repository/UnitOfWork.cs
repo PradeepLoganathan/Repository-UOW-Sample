@@ -12,11 +12,14 @@ namespace BookStore.Repository
 
         public ICatalogueRepository Catalogues { get; }
 
-        public UnitOfWork(BookStoreDbContext bookStoreDbContext)
+        public UnitOfWork(BookStoreDbContext bookStoreDbContext, 
+            IBooksRepository booksRepository, 
+            ICatalogueRepository catalogueRepository)
         {
             this._context = bookStoreDbContext;
-            this.Books = new BooksRepository(_context);
-            this.Catalogues = new CatalogueRepository(_context);
+            
+            this.Books = booksRepository;
+            this.Catalogues = catalogueRepository;
         }
         public int Complete()
         {
