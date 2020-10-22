@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookStore.Domain;
 using BookStore.Domain.BooksAggregate;
 using BookStore.Domain.CatalogueAggregate;
-using BookStore.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.API.Controllers
@@ -14,7 +11,7 @@ namespace BookStore.API.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         public BooksController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
