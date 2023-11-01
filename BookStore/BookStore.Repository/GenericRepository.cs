@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Repository
 {
-    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly BookStoreDbContext _context;
+        private readonly DbContext _context;
 
-        protected GenericRepository(BookStoreDbContext context)
+        public GenericRepository(DbContext context)
         {
             _context = context;
         }
@@ -38,5 +39,7 @@ namespace BookStore.Repository
         {
             _context.Set<T>().Update(entity);
         }
+
+        
     }
 }

@@ -12,29 +12,31 @@ namespace BookStore.API.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public BooksController(IUnitOfWork unitOfWork)
+        private IBooksRepository BooksRepository;
+        public BooksController(IBooksRepository booksRepository, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            BooksRepository = booksRepository;
         }
 
         // GET: api/<Books>
         [HttpGet]
         public async Task<IEnumerable<Book>> Get()
         {
-            return await _unitOfWork.Books.GetAll();
+            return await BooksRepository.GetAll();
         }
 
         [HttpGet]
-        public IEnumerable<Book> GetByGenre([FromQuery] string Genre)
+        public async Task<IAsyncEnumerable<Book>> GetByGenre([FromQuery] string Genre)
         {
-            return _unitOfWork.Books.GetBooksByGenre(Genre);
+            return await BooksRepository.GetBooksByGenre(Genre);
         }
 
         // GET api/<Books>/5
         [HttpGet("{id}")]
         public async Task<Book> Get(int id)
         {
-            return await _unitOfWork.Books.Get(id);
+            return await BooksRepository.Get(id);
         }
 
         // POST api/<Books>
@@ -51,16 +53,21 @@ namespace BookStore.API.Controllers
                 Publisher = "Microsoft Press"
             };
 
-            var Catalog = new Catalogue
+            var catalog = new Catalogue
             {
                 CatalogueId = 1,
                 Name = "Programming Books",
                 Description = "Books on Software development"
             };
 
-            _unitOfWork.Books.Add(book);
-            _unitOfWork.Catalogues.Add(Catalog);
-            _unitOfWork.Complete();
+                
+            var booksRepository = _unitOfWork.GetGenericRepository<Book>();
+            var catalogueRepository = _unitOfWork.GetGenericRepository<Catalogue>();
+            _unitOfWork.BeginTransaction();
+            booksRepository.Add(book);
+            catalogueRepository.Add(catalog);
+            _unitOfWork.Commit();
+            
             return Ok();
         }
 

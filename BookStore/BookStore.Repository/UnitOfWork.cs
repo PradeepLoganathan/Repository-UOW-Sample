@@ -1,40 +1,58 @@
 ﻿using System;
+using System.Transactions;
 using BookStore.Domain;
-using BookStore.Domain.BooksAggregate;
-using BookStore.Domain.CatalogueAggregate;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Repository
 {
     public class UnitOfWork :IUnitOfWork
     {
-        private readonly BookStoreDbContext _context;
-        public IBooksRepository Books { get; }
-
-        public ICatalogueRepository Catalogues { get; }
-
-        public UnitOfWork(BookStoreDbContext bookStoreDbContext, 
-            IBooksRepository booksRepository, 
-            ICatalogueRepository catalogueRepository)
+        private readonly DbContext _context;
+        private bool _disposed;
+        private TransactionScope _transactionScope;
+       
+        public UnitOfWork(DbContext bookStoreDbContext)
         {
             this._context = bookStoreDbContext;
-            
-            this.Books = booksRepository;
-            this.Catalogues = catalogueRepository;
         }
-        public int Complete()
+
+        public void BeginTransaction()
         {
-            return _context.SaveChanges();
+            _transactionScope = new TransactionScope();
         }
+
+        public void Commit()
+        {
+            _transactionScope.Complete();
+        }
+
+        public void RollBack()
+        {
+            _transactionScope.Dispose();
+        }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public IGenericRepository<T> GetGenericRepository<T>() where T : class
+        {
+            return new GenericRepository<T>(_context);
+        }
+
+        
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!_disposed)
             {
-                _context.Dispose();
+                if (disposing)
+                {
+                    _transactionScope?.Dispose();
+                }
+
+                _disposed = true;
             }
         }
     }

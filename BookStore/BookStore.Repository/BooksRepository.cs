@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using BookStore.Domain.BooksAggregate;
 
 namespace BookStore.Repository
@@ -11,10 +14,10 @@ namespace BookStore.Repository
             
         }
 
-        public IEnumerable<Book> GetBooksByGenre(string Genre)
+        public Task<IAsyncEnumerable<Book>>  GetBooksByGenre(string Genre)
         {
-            return _context.Books.Where(x => x.Genre == Genre);
+            throw new NotImplementedException();
         }
-
+       
     }
 }
